@@ -1,0 +1,9 @@
+langchain-astradb
+langchain 
+datasets
+pypdf
+python-dotenv
+flask
+langchain_huggingface
+faiss-cpu
+-e .

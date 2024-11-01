@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Bot</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Upload PDF and Ask Questions</h1>
+    
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" name="file" required>
+        <button type="submit">Upload PDF</button>
+    </form>
+
+    <form id="questionForm">
+        <input type="text" name="msg" placeholder="Ask a question..." required>
+        <button type="submit">Ask</button>
+    </form>
+
+    <div id="response"></div>
+
+    <script>
+        $(document).ready(function() {
+            $('#uploadForm').on('submit', function(e) {
+                e.preventDefault();
+                var formData = new FormData(this);
+                $.ajax({
+                    url: '/upload',
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(data) {
+                        alert(data);  // Display success message
+                    },
+                    error: function(jqXHR) {
+                        alert(jqXHR.responseText);  // Display error message
+                    }
+                });
+            });
+
+            $('#questionForm').on('submit', function(e) {
+                e.preventDefault();
+                var msg = $(this).find('input[name="msg"]').val();
+                $.ajax({
+                    url: '/get',
+                    type: 'POST',
+                    data: { msg: msg },
+                    success: function(data) {
+                        $('#response').html('<p>' + data.answer + '</p>');  // Display answer
+                    },
+                    error: function(jqXHR) {
+                        $('#response').html('<p>' + jqXHR.responseText + '</p>');  // Display error
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
